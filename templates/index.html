@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通讯录管理系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题栏 -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-address-book"></i>
+                <h1>通讯录管理系统</h1>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="showAddForm()">
+                    <i class="fas fa-plus"></i> 添加联系人
+                </button>
+            </div>
+        </header>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索联系人..." oninput="searchContacts()">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="toggleView('all')">
+                    <i class="fas fa-users"></i> 全部联系人
+                </button>
+                <button class="btn btn-secondary" onclick="toggleView('favorites')">
+                    <i class="fas fa-star"></i> 收藏夹
+                </button>
+                <button class="btn btn-success" onclick="exportExcel()">
+                    <i class="fas fa-file-export"></i> 导出Excel
+                </button>
+                <button class="btn btn-info" onclick="showImportModal()">
+                    <i class="fas fa-file-import"></i> 导入Excel
+                </button>
+                <button class="btn btn-warning" onclick="window.open('/template', '_blank')">
+                    <i class="fas fa-download"></i> 下载模板
+                </button>
+            </div>
+        </div>
+
+        <!-- 联系人列表 -->
+        <div class="contacts-container">
+            <div class="stats-bar">
+                <span id="contactCount">加载中...</span>
+                <span id="favoriteCount"></span>
+            </div>
+            <div class="contacts-grid" id="contactsGrid">
+                <div class="loading">加载联系人...</div>
+            </div>
+        </div>
+
+        <!-- 导入Excel模态框 -->
+        <div class="modal" id="importModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>导入Excel文件</h3>
+                    <button class="close-btn" onclick="closeModal('importModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="excelFile">选择Excel/CSV文件 (.xlsx, .xls, .csv)</label>
+                        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv">
+                    </div>
+                    <div class="tips">
+                        <p><strong>提示：</strong></p>
+                        <p>1. 文件必须包含"姓名"列</p>
+                        <p>2. 支持"电话"、"邮箱"、"地址"、"备注"、"是否收藏"列</p>
+                        <p>3. 多个电话/邮箱用分号(;)分隔</p>
+                        <p>4. 下载模板：<a href="/api/template/download" target="_blank">点击下载CSV模板</a></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal('importModal')">取消</button>
+                    <button class="btn btn-primary" onclick="uploadExcel()">开始导入</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 添加/编辑联系人模态框 -->
+        <div class="modal" id="contactModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">添加联系人</h3>
+                    <button class="close-btn" onclick="closeModal('contactModal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="contactForm" onsubmit="return saveContact(event)">
+                        <div class="form-group">
+                            <label for="contactName">姓名 *</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>联系方式</label>
+                            <div id="contactMethods">
+                                <!-- 联系方式动态添加 -->
+                                <div class="method-row">
+                                    <select class="method-type">
+                                        <option value="phone">电话</option>
+                                        <option value="email">邮箱</option>
+                                        <option value="social">社交媒体</option>
+                                        <option value="address">地址</option>
+                                    </select>
+                                    <input type="text" class="method-value" placeholder="联系方式">
+                                    <input type="text" class="method-label" placeholder="标签（可选）">
+                                    <button type="button" class="remove-method" onclick="removeMethod(this)">×</button>
+                                </div>
+                            </div>
+                            <button type="button" class="add-method" onclick="addMethod()">添加联系方式</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactNotes">备注</label>
+                            <textarea id="contactNotes" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="contactFavorite"> 添加到收藏夹
+                            </label>
+                        </div>
+
+                        <input type="hidden" id="contactId">
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('contactModal')">取消</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // 页面加载完成后获取联系人
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContacts();
+        });
+    </script>
+</body>
+</html>

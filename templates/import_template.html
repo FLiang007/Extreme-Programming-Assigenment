@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导入模板说明</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e3f2fd;
+        }
+
+        .required {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .example {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .example pre {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #e0e0e0;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+
+        .steps li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: #667eea;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #ff9800;
+        }
+
+        .btn-secondary:hover {
+            background: #e68900;
+        }
+
+        .note {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .note strong {
+            color: #f57c00;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-link i {
+            margin-right: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>通讯录导入模板说明</h1>
+            <p>按照以下格式准备Excel/CSV文件进行导入</p>
+        </div>
+
+        <div class="content">
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left"></i> 返回通讯录
+            </a>
+
+            <div class="section">
+                <h2>文件格式要求</h2>
+                <p>请确保您的Excel/CSV文件包含以下列，列名必须完全一致：</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>列名</th>
+                            <th>说明</th>
+                            <th>示例</th>
+                            <th>是否必需</th>
+                            <th>格式要求</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>姓名</strong></td>
+                            <td>联系人姓名</td>
+                            <td>张三</td>
+                            <td class="required">必需</td>
+                            <td>文本，不能为空</td>
+                        </tr>
+                        <tr>
+                            <td><strong>电话</strong></td>
+                            <td>电话号码</td>
+                            <td>13800138000; 13900139000</td>
+                            <td class="optional">可选</td>
+                            <td>多个用分号(;)分隔</td>
+                        </tr>
+                        <tr>
+                            <td><strong>邮箱</strong></td>
+                            <td>电子邮箱地址</td>
+                            <td>zhangsan@example.com</td>
+                            <td class="optional">可选</td>
+                            <td>多个用分号(;)分隔</td>
+                        </tr>
+                        <tr>
+                            <td><strong>社交媒体</strong></td>
+                            <td>社交媒体账号</td>
+                            <td>@zhangsan</td>
+                            <td class="optional">可选</td>
+                            <td>多个用分号(;)分隔</td>
+                        </tr>
+                        <tr>
+                            <td><strong>地址</strong></td>
+                            <td>联系地址</td>
+                            <td>北京市海淀区</td>
+                            <td class="optional">可选</td>
+                            <td>多个用分号(;)分隔</td>
+                        </tr>
+                        <tr>
+                            <td><strong>备注</strong></td>
+                            <td>备注信息</td>
+                            <td>同事</td>
+                            <td class="optional">可选</td>
+                            <td>文本</td>
+                        </tr>
+                        <tr>
+                            <td><strong>是否收藏</strong></td>
+                            <td>标记为收藏联系人</td>
+                            <td>是 或 否</td>
+                            <td class="optional">可选</td>
+                            <td>填"是"或"否"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>示例数据</h2>
+                <div class="example">
+                    <h3>CSV格式示例：</h3>
+                    <pre>
+姓名,电话,邮箱,社交媒体,地址,备注,是否收藏
+张三,13800138000; 13900139000,zhangsan@example.com,@zhangsan,北京市海淀区,同事,是
+李四,13600136000,lisi@example.com,,上海市浦东新区,朋友,否
+王五,13700137000,wangwu@example.com,@wangwu,广州市天河区,同学,是
+赵六,13500135000,,,深圳市南山区,客户,否
+                    </pre>
+                </div>
+
+                <div class="note">
+                    <p><strong>注意：</strong>您不需要包含所有列，但"姓名"列是必须的。其他列如果没有数据可以留空。</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>导入步骤</h2>
+                <ol class="steps">
+                    <li>下载模板文件或按照上述格式创建Excel/CSV文件</li>
+                    <li>在通讯录主页面点击"导入Excel"按钮</li>
+                    <li>选择您准备好的文件</li>
+                    <li>系统会自动解析并显示导入结果</li>
+                    <li>检查导入结果，如有错误会显示具体信息</li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>常见问题</h2>
+                <div class="note">
+                    <p><strong>Q: 文件支持什么格式？</strong></p>
+                    <p>A: 支持 .xlsx, .xls, .csv 格式文件。</p>
+                </div>
+                <div class="note">
+                    <p><strong>Q: 中文乱码怎么办？</strong></p>
+                    <p>A: 请确保文件保存为 UTF-8 编码（CSV文件）。建议使用提供的模板。</p>
+                </div>
+                <div class="note">
+                    <p><strong>Q: 导入失败怎么办？</strong></p>
+                    <p>A: 检查文件格式是否符合要求，列名是否正确，数据格式是否正确。</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="/api/template/download" class="btn btn-primary">
+                    <i class="fas fa-download"></i> 下载CSV模板
+                </a>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> 返回通讯录
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加返回按钮功能
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
